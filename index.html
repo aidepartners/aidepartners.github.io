@@ -2,38 +2,45 @@
 <html>
 
 <head>
-    <title>PDF.js viewer</title>
-    <script src="js/pdf.js"></script>
+    <meta charset="UTF-8">
+    <title>PDF.js로 PDF 랜더링하기</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
-    <canvas id="pdf-renderer"></canvas>
+    <canvas id="pdf-canvas"></canvas>
+    <script src="pdf.js"></script>
     <script>
-        var pdfUrl = 'https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf';
+        // 원하는 PDF URL
+        const pdfURL = 'https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf';
 
-        pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
-            pdfDoc = pdfDoc_;
-            pageNum = 1;
-            renderPage(pageNum);
-        });
+        // PDF.js 라이브러리를 이용하여 PDF 랜더링
+        async function renderPDF(url) {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            const pageNum = 1;
+            const page = await pdf.getPage(pageNum);
 
-        function renderPage(num) {
-            pdfDoc.getPage(num).then(function (page) {
-                var scale = 1.5;
-                var viewport = page.getViewport({ scale: scale });
+            const scale = 1.5;
+            const canvas = document.getElementById('pdf-canvas');
+            const context = canvas.getContext('2d');
+            const viewport = page.getViewport({ scale });
 
-                var canvas = document.getElementById('pdf-renderer');
-                var ctx = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
 
-                var renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                page.render(renderContext);
-            });
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            await page.render(renderContext);
         }
+
+        renderPDF(pdfURL);
     </script>
 </body>
 
