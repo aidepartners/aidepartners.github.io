@@ -1,47 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>PDF.js로 PDF 랜더링하기</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
+    <title>pdf viewer test</title>
 </head>
 
-<body>
-    <canvas id="pdf-canvas"></canvas>
-    <script src="pdf.js"></script>
-    <script>
-        // 원하는 PDF URL
-        const pdfURL = 'https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf';
-
-        // PDF.js 라이브러리를 이용하여 PDF 랜더링
-        async function renderPDF(url) {
-            const pdf = await pdfjsLib.getDocument(url).promise;
-            const pageNum = 1;
-            const page = await pdf.getPage(pageNum);
-
-            const scale = 1.5;
-            const canvas = document.getElementById('pdf-canvas');
-            const context = canvas.getContext('2d');
-            const viewport = page.getViewport({ scale });
-
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-
-            await page.render(renderContext);
-        }
-
-        renderPDF(pdfURL);
-    </script>
+<body style="height: 100%;width: 100%;overflow: hidden;margin:0px;background-color: rgb(82, 86, 89);">
+    <div id="example1" style="height:100%; width:100%; position:absolute;"></div>
+    <script src="./pdfobject.js"></script>
+    <!-- <script>PDFObject.embed("./compressed.tracemonkey-pldi-09.pdf", "#example1");</script> -->
+    <script>PDFObject.embed("https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf", "#example1");</script>
 </body>
 
 </html>
