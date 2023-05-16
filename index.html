@@ -11,18 +11,38 @@
             width: 100%;
             overflow: hidden;
         }
-    </style>
-    <script>
-        function openPDF() {
-            window.open("https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf");
+
+        canvas {
+            display: block;
         }
+    </style>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script>
+        const url = 'https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf';
+
+        const loadingTask = pdfjsLib.getDocument(url);
+        loadingTask.promise.then(function (pdf) {
+            pdf.getPage(1).then(function (page) {
+                const viewport = page.getViewport({ scale: 1 });
+                const canvas = document.getElementById('pdfCanvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderTask = page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                });
+                renderTask.promise.then(function () {
+                    console.log('PDF rendered on the canvas.');
+                });
+            });
+        });
     </script>
 </head>
 
-<body onclick="openPDF()">
-    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-        <button style="font-size: 24px; padding: 12px 24px;">PDF 열기</button>
-    </div>
+<body>
+    <canvas id="pdfCanvas"></canvas>
 </body>
 
 </html>
