@@ -1,15 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>pdf viewer test</title>
+    <title>PDF.js Viewer Test</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: rgb(82, 86, 89);
+        }
+
+        #pdfViewer {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+
+        iframe {
+            border: none;
+        }
+    </style>
 </head>
 
-<body style="height: 100%;width: 100%;overflow: hidden;margin:0px;background-color: rgb(82, 86, 89);">
-    <div id="example1" style="height:100%; width:100%; position:absolute;"></div>
-    <script src="./pdfobject.js"></script>
-    <script>PDFObject.embed("https://storage.googleapis.com/ch-aide-public/deployment/%EC%97%90%EC%9D%B4%EB%93%9C%20%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8.pdf", "#example1");</script>
+<body>
+    <div id="pdfViewer">
+        <iframe id="pdfJsViewer" width="100%" height="100%"></iframe>
+    </div>
+    <script>
+        const pdfURL = "에이드 인사이트.pdf";
+        const encodedURL = encodeURIComponent(pdfURL);
+        document.getElementById("pdfJsViewer").src = "./web/viewer.html?file=" + encodedURL;
+    </script>
 </body>
 
 </html>
